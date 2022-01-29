@@ -227,21 +227,6 @@ function Game(props: GameProps) {
 
   return (
     <div className="Game" style={{ display: props.hidden ? "none" : "block" }}>
-      <div className="Game-options">
-        <button
-          style={{ flex: "0 0 auto" }}
-          disabled={gameState !== GameState.Playing || guesses.length === 0}
-          onClick={() => {
-            setHint(
-              `The answer was ${target.toUpperCase()}. (Enter to play again)`
-            );
-            setGameState(GameState.Lost);
-            (document.activeElement as HTMLElement)?.blur();
-          }}
-        >
-          Give up
-        </button>
-      </div>
       <table
         className="Game-rows"
         tabIndex={0}
