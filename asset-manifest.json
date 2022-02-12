@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/feardle/static/css/main.e4af6f47.css",
-    "main.js": "/feardle/static/js/main.58c3e3f5.js",
+    "main.js": "/feardle/static/js/main.e28eb1e5.js",
     "index.html": "/feardle/index.html",
     "main.e4af6f47.css.map": "/feardle/static/css/main.e4af6f47.css.map",
-    "main.58c3e3f5.js.map": "/feardle/static/js/main.58c3e3f5.js.map"
+    "main.e28eb1e5.js.map": "/feardle/static/js/main.e28eb1e5.js.map"
   },
   "entrypoints": [
     "static/css/main.e4af6f47.css",
-    "static/js/main.58c3e3f5.js"
+    "static/js/main.e28eb1e5.js"
   ]
 }
