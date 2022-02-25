@@ -45,7 +45,7 @@ function App() {
     document.body.className = dark ? "dark" : "";
     setTimeout(() => {
       // Avoid transition on page load
-      document.body.style.transition = "0.3s background-color ease-out";	  
+      document.body.style.transition = "0.3s background-color ease-out";
     }, 1);
   }, [dark]);
 

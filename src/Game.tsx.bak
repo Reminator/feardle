@@ -19,6 +19,7 @@ enum GameState {
   Playing,
   Won,
   Lost,
+  Completed
 }
 
 interface GameProps {
@@ -29,9 +30,25 @@ interface GameProps {
   keyboardLayout: string;
 }
 
-const targets = targetList.slice(0, targetList.indexOf("ZINGS") + 1); // Words no rarer than this one
+const targets = targetList.slice(0, targetList.indexOf("zings") + 1); // Choose target words
 const minWordLength = 4;
 const maxWordLength = 11;
+const startDate = new Date(2022, 1, 1);
+
+function getDifferenceInDays(date1: any, date2: any)
+{
+  const diffInDays = Math.abs(date2 - date1);
+  return diffInDays / ((1000 * 60 * 60 * 24));
+}
+
+function dailyTarget()
+{
+	//let day = getDifferenceInDays(startDate, new Date());
+	let day = getDifferenceInDays(startDate, startDate);
+	console.log(day);
+
+	return targets[Math.floor(day)];
+}
 
 function randomTarget(wordLength: number): string {
   const eligible = targets.filter((word) => word.length === wordLength);
@@ -65,6 +82,33 @@ if (initChallenge && !dictionarySet.has(initChallenge)) {
 }
 
 function Game(props: GameProps) {
+  var stats =
+  {
+	"wins": 0,
+	"losses": 0,
+	"streak": 0,
+	"oneWins": 0,
+	"twoWins": 0,
+	"threeWins": 0,
+	"fourWins": 0,
+	"fiveWins": 0,
+	"sixWins": 0
+  };
+  var progress =
+  {
+	"guessList": [],
+	"current": "",
+	"lastTarget": "",
+	"dailyComplete": false
+  };
+  if (localStorage.getItem('stats') ===  null)
+  {
+	localStorage.setItem('stats', JSON.stringify(stats));
+  }
+  if (localStorage.getItem('progress') ===  null)
+  {
+	localStorage.setItem('progress', JSON.stringify(progress));
+  }
   const [gameState, setGameState] = useState(GameState.Playing);
   const [guesses, setGuesses] = useState<string[]>([]);
   const [currentGuess, setCurrentGuess] = useState<string>("");
@@ -79,10 +123,12 @@ function Game(props: GameProps) {
   );
   const [target, setTarget] = useState(() => {
     resetRng();
-    return challenge || randomTarget(wordLength);
+	return challenge || dailyTarget();
+    //return challenge || randomTarget(wordLength);
   });
   const [gameNumber, setGameNumber] = useState(1);
   const tableRef = useRef<HTMLTableElement>(null);
+  
   const startNextGame = () => {
     if (challenge) {
       // Clear the URL parameters:
@@ -98,6 +144,14 @@ function Game(props: GameProps) {
     setHint("");
     setGameState(GameState.Playing);
     setGameNumber((x) => x + 1);
+	// test
+	progress = JSON.parse(localStorage.getItem('progress') || "");
+	setCurrentGuess(progress.current);
+	setGuesses(progress.guessList);
+	console.log("Guess list: " + guesses + "\n" + "current: " + currentGuess);
+    setCurrentGuess((guess) => "");
+	speak(describeClue(clue(currentGuess, target)));
+	// end test
   };
 
   async function share(url: string, copiedHint: string, text?: string) {
@@ -122,11 +176,43 @@ function Game(props: GameProps) {
     }
     setHint(url);
   }
-
+  
+  // Load stuffs
+  window.onload = function()
+  {
+	progress = JSON.parse(localStorage.getItem('progress') || "");
+	if(progress.lastTarget === target)
+	{
+		setCurrentGuess(progress.current);
+		setGuesses(progress.guessList);
+		if(progress.current !== "")
+			setGuesses((guesses) => guesses.concat([progress.current]));
+		setCurrentGuess((guess) => "");
+		speak(describeClue(clue(currentGuess, target)));
+		
+		if(progress.guessList !== [])
+		{
+			setHint("");
+		
+			if(progress.guessList.length + 1 === props.maxGuesses)
+				setHint("No more tries today. Come back tomorrow!");
+		}
+		
+		if(progress.dailyComplete === true)
+			setGameState(GameState.Completed);
+	}
+	else
+	{
+		progress.lastTarget = target;
+		progress.dailyComplete = false;
+		localStorage.setItem('progress', JSON.stringify(progress));
+	}
+  }  
+  
   const onKey = (key: string) => {
     if (gameState !== GameState.Playing) {
       if (key === "Enter") {
-        startNextGame();
+        setHint("No more tries today. Come back tomorrow!");
       }
       return;
     }
@@ -142,7 +228,7 @@ function Game(props: GameProps) {
       setHint("");
     } else if (key === "Enter") {
       if (currentGuess.length !== wordLength) {
-        setHint("Too short");
+        setHint("Too short\n" + target + "\nstats: " + JSON.stringify(stats) + "\nlocalStorage Stats: " + localStorage.getItem('stats') + "\nProgress: " + localStorage.getItem('progress'));
         return;
       }
       if (!dictionary.includes(currentGuess)) {
@@ -158,23 +244,54 @@ function Game(props: GameProps) {
         }
       }
       setGuesses((guesses) => guesses.concat([currentGuess]));
-      setCurrentGuess((guess) => "");
-
+      setCurrentGuess((guess) => "");	  
+	  var tStreak = JSON.parse(localStorage.stats).streak;
       const gameOver = (verbed: string) =>
-        `You ${verbed}! The answer was ${target.toUpperCase()}. (Enter to ${
-          challenge ? "play a random game" : "play again"
-        })`;
+        `You ${verbed}! The answer was ${target.toUpperCase()}.\nYour current wins: ${JSON.parse(localStorage.stats).wins}\nYour win streak: ${tStreak}`;
 
+	  var tStats = JSON.parse(localStorage.getItem('stats') || "");
+	  var tProgress = JSON.parse(localStorage.getItem('progress') || "");
       if (currentGuess === target) {
+	    tStats.wins += 1;
+		tStats.streak += 1;
+		tProgress.dailyComplete = true;
+		
+		switch (guesses.length + 1)
+		{
+			case 1: tStats.oneWins += 1;
+			break;
+			case 2: tStats.twoWins += 1;
+			break;
+			case 3: tStats.threeWins += 1;
+			break;
+			case 4: tStats.fourWins += 1;
+			break;
+			case 5: tStats.fiveWins += 1;
+			break;
+			case 6: tStats.sixWins += 1;
+			break;
+		}		
+		
+		tStreak = tStats.streak;	
+		localStorage.setItem('stats', JSON.stringify(tStats)); // Store wins and current win streak		
         setHint(gameOver("won"));
         setGameState(GameState.Won);
       } else if (guesses.length + 1 === props.maxGuesses) {
+		var tStats = JSON.parse(localStorage.getItem('stats') || "");
+		tStats.losses += 1;
+	    tStats.streak = 0;
+		tProgress.dailyComplete = true;
+		tStreak = tStats.streak;
+		localStorage.setItem('stats', JSON.stringify(tStats)); // Reset win streak
         setHint(gameOver("lost"));
         setGameState(GameState.Lost);
       } else {
         setHint("");
         speak(describeClue(clue(currentGuess, target)));
       }
+	  tProgress.guessList = guesses;
+	  tProgress.current = currentGuess;
+	  localStorage.setItem('progress', JSON.stringify(tProgress)); // Store guesses and current guess
     }
   };
 
@@ -182,6 +299,7 @@ function Game(props: GameProps) {
     const onKeyDown = (e: KeyboardEvent) => {
       if (!e.ctrlKey && !e.metaKey) {
         onKey(e.key);
+		console.log("key down");
       }
       if (e.key === "Backspace") {
         e.preventDefault();
