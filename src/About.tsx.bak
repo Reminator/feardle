@@ -20,7 +20,7 @@ export function About() {
         I think is based on the TV show <i>Lingo</i>.
       </p>
 	  <p>
-		<i>Feardle</i> is horror themed <i>Wordle</i>. All answers will be words or names that are spooky, scary or otherwise related to the best genre in the world-- <span style={red}>HORROR</span>!
+		<i>Feardle</i> is horror themed <i>Wordle</i>. All answers will be words or names that are spooky, scary or otherwise related to the best genre in the world-- <span style=color:'red'>HORROR</span>!
 	  </p>
       <p>
         You get {maxGuesses} tries to guess a target word.

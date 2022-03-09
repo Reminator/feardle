@@ -43,9 +43,8 @@ function getDifferenceInDays(date1: any, date2: any)
 
 function dailyTarget()
 {
-	//let day = getDifferenceInDays(startDate, new Date());
-	let day = getDifferenceInDays(startDate, startDate);
-	console.log(day);
+	let day = getDifferenceInDays(startDate, new Date());
+	//let day = getDifferenceInDays(startDate, startDate);
 
 	return targets[Math.floor(day)];
 }
@@ -87,19 +86,22 @@ function Game(props: GameProps) {
 	"wins": 0,
 	"losses": 0,
 	"streak": 0,
+	"maxStreak": 0,
 	"oneWins": 0,
 	"twoWins": 0,
 	"threeWins": 0,
 	"fourWins": 0,
 	"fiveWins": 0,
-	"sixWins": 0
+	"sixWins": 0,
+	"lastPlayed": 0
   };
   var progress =
   {
 	"guessList": [],
 	"current": "",
 	"lastTarget": "",
-	"dailyComplete": false
+	"dailyComplete": false,
+	"guessNumber": 0
   };
   if (localStorage.getItem('stats') ===  null)
   {
@@ -144,14 +146,14 @@ function Game(props: GameProps) {
     setHint("");
     setGameState(GameState.Playing);
     setGameNumber((x) => x + 1);
-	// test
+	/* // test
 	progress = JSON.parse(localStorage.getItem('progress') || "");
 	setCurrentGuess(progress.current);
 	setGuesses(progress.guessList);
 	console.log("Guess list: " + guesses + "\n" + "current: " + currentGuess);
     setCurrentGuess((guess) => "");
 	speak(describeClue(clue(currentGuess, target)));
-	// end test
+	// end test */
   };
 
   async function share(url: string, copiedHint: string, text?: string) {
@@ -181,6 +183,8 @@ function Game(props: GameProps) {
   window.onload = function()
   {
 	progress = JSON.parse(localStorage.getItem('progress') || "");
+	stats = JSON.parse(localStorage.getItem('stats') || "");
+	
 	if(progress.lastTarget === target)
 	{
 		setCurrentGuess(progress.current);
@@ -203,8 +207,16 @@ function Game(props: GameProps) {
 	}
 	else
 	{
+		var difference = Math.floor(getDifferenceInDays(startDate, new Date())) - stats.lastPlayed
+		
+		if(difference > 1)
+			stats.streak = 0;
+	
 		progress.lastTarget = target;
 		progress.dailyComplete = false;
+		progress.guessNumber = 0;
+		
+		localStorage.setItem('stats', JSON.stringify(stats));
 		localStorage.setItem('progress', JSON.stringify(progress));
 	}
   }  
@@ -247,14 +259,18 @@ function Game(props: GameProps) {
       setCurrentGuess((guess) => "");	  
 	  var tStreak = JSON.parse(localStorage.stats).streak;
       const gameOver = (verbed: string) =>
-        `You ${verbed}! The answer was ${target.toUpperCase()}.\nYour current wins: ${JSON.parse(localStorage.stats).wins}\nYour win streak: ${tStreak}`;
+        `You ${verbed}! The answer was ${target.toUpperCase()}.`;
 
 	  var tStats = JSON.parse(localStorage.getItem('stats') || "");
 	  var tProgress = JSON.parse(localStorage.getItem('progress') || "");
       if (currentGuess === target) {
+		tStats.lastPlayed = Math.floor(getDifferenceInDays(startDate, new Date()));
 	    tStats.wins += 1;
 		tStats.streak += 1;
+		if(tStats.streak > tStats.maxStreak)
+			tStats.maxStreak = tStats.streak;
 		tProgress.dailyComplete = true;
+		tProgress.guessNumber = guesses.length + 1;
 		
 		switch (guesses.length + 1)
 		{
@@ -270,9 +286,9 @@ function Game(props: GameProps) {
 			break;
 			case 6: tStats.sixWins += 1;
 			break;
-		}		
-		
-		tStreak = tStats.streak;	
+		}
+				
+		tStreak = tStats.streak;
 		localStorage.setItem('stats', JSON.stringify(tStats)); // Store wins and current win streak		
         setHint(gameOver("won"));
         setGameState(GameState.Won);
@@ -299,7 +315,6 @@ function Game(props: GameProps) {
     const onKeyDown = (e: KeyboardEvent) => {
       if (!e.ctrlKey && !e.metaKey) {
         onKey(e.key);
-		console.log("key down");
       }
       if (e.key === "Backspace") {
         e.preventDefault();
@@ -371,19 +386,11 @@ function Game(props: GameProps) {
         <p>
           <button
             onClick={() => {
-              share(
-                getChallengeUrl(target),
-                "Challenge link copied to clipboard!"
-              );
-            }}
-          >
-            Challenge a friend to this word
-          </button>{" "}
-          <button
-            onClick={() => {
               const emoji = props.colorBlind
-                ? ["⬛", "🟦", "🟧"]
-                : ["⬛", "🟨", "🟩"];
+                //? ["⬛", "🟦", "🟧"]
+				? ["🩸", "🔪", "🎃"]
+                //: ["⬛", "🟨", "🟩"];
+				: ["🩸", "🔪", "🎃"];
               share(
                 getChallengeUrl(target),
                 "Result copied to clipboard!",
