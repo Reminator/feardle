@@ -4,7 +4,7 @@ import dictionary from "./dictionary.json";
 import dictionaryChicken from "./dictionaryChicken.json";
 import { Clue, clue, describeClue, violation } from "./clue";
 import { Keyboard } from "./Keyboard";
-import targetList from "./targets.json";
+import targetList from "./targetsRandom.json";
 import triviaList from "./trivia.json";
 import {
   dictionarySet,
@@ -33,10 +33,10 @@ interface GameProps {
   keyboardLayout: string;  
 }
 
-const targets = targetList.slice(0, targetList.indexOf("zings") + 1); // Choose target words
+const targets = targetList.slice(0, targetList.indexOf("craze") + 1); // Choose target words
 const minWordLength = 4;
 const maxWordLength = 11;
-const startDate = new Date(2022, 1, 1);
+const startDate = new Date("2022-05-10");
 var answerText = "";
 
 function getDifferenceInDays(date1: any, date2: any)
@@ -58,8 +58,9 @@ function dailyTarget()
 function dailyTrivia()
 {
 	let day = getDifferenceInDays(startDate, new Date());
+	let trivia = triviaList[Math.floor(day)]
 	
-	return triviaList[Math.floor(day)];
+	return trivia.slice(8, trivia.length);
 }
 
 function randomTarget(wordLength: number): string {
@@ -266,7 +267,8 @@ function Game(props: GameProps) {
       setHint("");
     } else if (key === "Enter") {
       if (currentGuess.length !== wordLength) {
-        setHint("Too short\n" + target + "\nstats: " + JSON.stringify(stats) + "\nlocalStorage Stats: " + localStorage.getItem('stats') + "\nProgress: " + localStorage.getItem('progress'));
+        //setHint("Too short\n" + target + "\nstats: " + JSON.stringify(stats) + "\nlocalStorage Stats: " + localStorage.getItem('stats') + "\nProgress: " + localStorage.getItem('progress'));
+		setHint("Too short.");
         return;
       }
 	  if(props.chicken)
@@ -326,7 +328,14 @@ function Game(props: GameProps) {
 
 		tStreak = tStats.streak;
 		localStorage.setItem('stats', JSON.stringify(tStats)); // Store wins and current win streak		
-        setHint(gameOver("won"));
+        //setHint(gameOver("won"));
+		setHint("You won!\n\nThe answer was " + target.toUpperCase() + ".\n\n" + guesses.concat(currentGuess)
+                  .map((guess) =>
+                    clue(guess, target)
+                      .map((c) => emoji[c.clue ?? 0])
+                      .join("")
+                  )
+                  .join("\n") + "\n\n" + trivia);
         setGameState(GameState.Won);
       } else if (guesses.length + 1 === props.maxGuesses) {
 		var tStats = JSON.parse(localStorage.getItem('stats') || "");
@@ -335,7 +344,14 @@ function Game(props: GameProps) {
 		tProgress.dailyComplete = true;
 		tStreak = tStats.streak;
 		localStorage.setItem('stats', JSON.stringify(tStats)); // Reset win streak
-        setHint(gameOver("lost"));
+        //setHint(gameOver("lost"));
+		setHint("You won!\n\nThe answer was " + target.toUpperCase() + ".\n\n" + guesses.concat(currentGuess)
+                  .map((guess) =>
+                    clue(guess, target)
+                      .map((c) => emoji[c.clue ?? 0])
+                      .join("")
+                  )
+                  .join("\n") + "\n\n" + trivia);
         setGameState(GameState.Lost);
       } else {
         setHint("");

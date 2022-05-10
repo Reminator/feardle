@@ -102,7 +102,7 @@ function App() {
           visibility: page === "game" ? "visible" : "hidden",
         }}
       >
-        <a
+        /* <a
           href="#"
           onClick={() =>
             (document.location = seed
@@ -112,7 +112,7 @@ function App() {
           }
         >
           {seed ? "Random" : "Today's"}
-        </a>
+        </a> */
       </div>
       {page === "about" && <About />}
 	  {page === "stats" && <Statistics />}
@@ -205,7 +205,7 @@ function App() {
         hidden={page !== "game"}
         difficulty={difficulty}
         colorBlind={colorBlind}
-		//chicken={chicken}
+		chicken={chicken}
         keyboardLayout={keyboard.replaceAll(
           /[BE]/g,
           (x) => (enterLeft ? "EB" : "BE")["BE".indexOf(x)]
