@@ -4,6 +4,7 @@
   "homepage": "https://reminator.github.io/feardle/",
   "private": false,
   "dependencies": {
+    "@ohnaka0410/minimal-modal": "^2.1.1",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",

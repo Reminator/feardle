@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Row, RowState } from "./Row";
 import dictionary from "./dictionary.json";
+import dictionaryChicken from "./dictionaryChicken.json";
 import { Clue, clue, describeClue, violation } from "./clue";
 import { Keyboard } from "./Keyboard";
 import targetList from "./targets.json";
+import triviaList from "./trivia.json";
 import {
   dictionarySet,
   Difficulty,
@@ -27,13 +29,15 @@ interface GameProps {
   hidden: boolean;
   difficulty: Difficulty;
   colorBlind: boolean;
-  keyboardLayout: string;
+  chicken: boolean;
+  keyboardLayout: string;  
 }
 
 const targets = targetList.slice(0, targetList.indexOf("zings") + 1); // Choose target words
 const minWordLength = 4;
 const maxWordLength = 11;
 const startDate = new Date(2022, 1, 1);
+var answerText = "";
 
 function getDifferenceInDays(date1: any, date2: any)
 {
@@ -41,12 +45,21 @@ function getDifferenceInDays(date1: any, date2: any)
   return diffInDays / ((1000 * 60 * 60 * 24));
 }
 
+const FeardleNumber = Math.floor(getDifferenceInDays(startDate, new Date()));
+
 function dailyTarget()
 {
 	let day = getDifferenceInDays(startDate, new Date());
 	//let day = getDifferenceInDays(startDate, startDate);
 
 	return targets[Math.floor(day)];
+}
+
+function dailyTrivia()
+{
+	let day = getDifferenceInDays(startDate, new Date());
+	
+	return triviaList[Math.floor(day)];
 }
 
 function randomTarget(wordLength: number): string {
@@ -61,9 +74,7 @@ function randomTarget(wordLength: number): string {
 function getChallengeUrl(target: string): string {
   return (
     window.location.origin +
-    window.location.pathname +
-    "?challenge=" +
-    encode(target)
+    window.location.pathname
   );
 }
 
@@ -81,6 +92,12 @@ if (initChallenge && !dictionarySet.has(initChallenge)) {
 }
 
 function Game(props: GameProps) {
+  const emoji = props.colorBlind
+                //? ["⬛", "🟦", "🟧"]
+				? ["🩸", "🔪", "🎃"]
+                //: ["⬛", "🟨", "🟩"];
+				: ["🩸", "🔪", "🎃"];
+				
   var stats =
   {
 	"wins": 0,
@@ -101,8 +118,11 @@ function Game(props: GameProps) {
 	"current": "",
 	"lastTarget": "",
 	"dailyComplete": false,
-	"guessNumber": 0
+	"guessNumber": 0,
+	"diff": null
   };
+  var scream1 = new Audio('scream1.mp3');
+  
   if (localStorage.getItem('stats') ===  null)
   {
 	localStorage.setItem('stats', JSON.stringify(stats));
@@ -117,17 +137,18 @@ function Game(props: GameProps) {
   const [hint, setHint] = useState<string>(
     challengeError
       ? `Invalid challenge string, playing random game.`
-      : `Make your first guess!`
+      : ``
   );
   const [challenge, setChallenge] = useState<string>(initChallenge);
   const [wordLength, setWordLength] = useState(
     challenge ? challenge.length : 5
   );
   const [target, setTarget] = useState(() => {
-    resetRng();
+    resetRng();    
 	return challenge || dailyTarget();
     //return challenge || randomTarget(wordLength);
   });
+  const [trivia, setTrivia] = useState<string>(dailyTrivia());
   const [gameNumber, setGameNumber] = useState(1);
   const tableRef = useRef<HTMLTableElement>(null);
   
@@ -146,18 +167,10 @@ function Game(props: GameProps) {
     setHint("");
     setGameState(GameState.Playing);
     setGameNumber((x) => x + 1);
-	/* // test
-	progress = JSON.parse(localStorage.getItem('progress') || "");
-	setCurrentGuess(progress.current);
-	setGuesses(progress.guessList);
-	console.log("Guess list: " + guesses + "\n" + "current: " + currentGuess);
-    setCurrentGuess((guess) => "");
-	speak(describeClue(clue(currentGuess, target)));
-	// end test */
   };
 
-  async function share(url: string, copiedHint: string, text?: string) {
-    const body = url + (text ? "\n\n" + text : "");
+  async function share(url: string, copiedHint: string, emoji?: string, score?: string) {
+    const body = url + (emoji ? "\n\nFeardle " + FeardleNumber + "\n" + score + "\n" + emoji : "");
     if (
       /android|iphone|ipad|ipod|webos/i.test(navigator.userAgent) &&
       !/firefox/i.test(navigator.userAgent)
@@ -202,13 +215,26 @@ function Game(props: GameProps) {
 				setHint("No more tries today. Come back tomorrow!");
 		}
 		
+		let tempGuesses = progress.guessList as string[];
+		tempGuesses.push(progress.current);
+		
 		if(progress.dailyComplete === true)
+		{
 			setGameState(GameState.Completed);
+			setHint("The answer was " + target.toUpperCase() + ".\n\n" + tempGuesses
+                  .map((guess) =>
+                    clue(guess, target)
+                      .map((c) => emoji[c.clue ?? 0])
+                      .join("")
+                  )
+                  .join("\n") + "\n\n" + trivia);
+		}
 	}
 	else
 	{
 		var difference = Math.floor(getDifferenceInDays(startDate, new Date())) - stats.lastPlayed
 		
+		// Set streak to 0 if missed a consecutive day
 		if(difference > 1)
 			stats.streak = 0;
 	
@@ -224,7 +250,7 @@ function Game(props: GameProps) {
   const onKey = (key: string) => {
     if (gameState !== GameState.Playing) {
       if (key === "Enter") {
-        setHint("No more tries today. Come back tomorrow!");
+        setHint("The answer was " + target.toUpperCase() + ".\n\n" + trivia + "\n\nNo more tries today. Come back tomorrow!");
       }
       return;
     }
@@ -243,10 +269,20 @@ function Game(props: GameProps) {
         setHint("Too short\n" + target + "\nstats: " + JSON.stringify(stats) + "\nlocalStorage Stats: " + localStorage.getItem('stats') + "\nProgress: " + localStorage.getItem('progress'));
         return;
       }
-      if (!dictionary.includes(currentGuess)) {
-        setHint("Not a valid word");
-        return;
-      }
+	  if(props.chicken)
+	  {
+		  if (!dictionaryChicken.includes(currentGuess)) {
+			setHint("Not a valid word");
+			return;
+		  }
+	  }
+	  else
+	  {
+		  if (!targetList.includes(currentGuess)) {
+			setHint("Not a valid word");
+			return;
+		  }
+	  }
       for (const g of guesses) {
         const c = clue(g, target);
         const feedback = violation(props.difficulty, c, currentGuess);
@@ -259,8 +295,7 @@ function Game(props: GameProps) {
       setCurrentGuess((guess) => "");	  
 	  var tStreak = JSON.parse(localStorage.stats).streak;
       const gameOver = (verbed: string) =>
-        `You ${verbed}! The answer was ${target.toUpperCase()}.`;
-
+        `You ${verbed}! The answer was ${target.toUpperCase()}. \n\n ${trivia}`;
 	  var tStats = JSON.parse(localStorage.getItem('stats') || "");
 	  var tProgress = JSON.parse(localStorage.getItem('progress') || "");
       if (currentGuess === target) {
@@ -270,6 +305,7 @@ function Game(props: GameProps) {
 		if(tStats.streak > tStats.maxStreak)
 			tStats.maxStreak = tStats.streak;
 		tProgress.dailyComplete = true;
+		tProgress.diff = props.difficulty;
 		tProgress.guessNumber = guesses.length + 1;
 		
 		switch (guesses.length + 1)
@@ -287,7 +323,7 @@ function Game(props: GameProps) {
 			case 6: tStats.sixWins += 1;
 			break;
 		}
-				
+
 		tStreak = tStats.streak;
 		localStorage.setItem('stats', JSON.stringify(tStats)); // Store wins and current win streak		
         setHint(gameOver("won"));
@@ -303,6 +339,8 @@ function Game(props: GameProps) {
         setGameState(GameState.Lost);
       } else {
         setHint("");
+		let audioPlayer = document.getElementById('audio') as HTMLAudioElement;
+		audioPlayer.play();
         speak(describeClue(clue(currentGuess, target)));
       }
 	  tProgress.guessList = guesses;
@@ -393,14 +431,17 @@ function Game(props: GameProps) {
 				: ["🩸", "🔪", "🎃"];
               share(
                 getChallengeUrl(target),
-                "Result copied to clipboard!",
+                "The answer was " + target.toUpperCase() + "." + "\n\nResult copied to clipboard!",
                 guesses
                   .map((guess) =>
                     clue(guess, target)
                       .map((c) => emoji[c.clue ?? 0])
                       .join("")
                   )
-                  .join("\n")
+                  .join("\n"),
+				  (JSON.parse(localStorage.progress).diff === Difficulty.Hard) ? JSON.parse(localStorage.progress).guessNumber + "/6*" 
+				  : (JSON.parse(localStorage.progress).diff === Difficulty.UltraHard) ? JSON.parse(localStorage.progress).guessNumber + "/6**" 
+				  : JSON.parse(localStorage.progress).guessNumber + "/6"
               );
             }}
           >

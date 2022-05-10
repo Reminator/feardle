@@ -35,12 +35,17 @@ function App() {
     window.matchMedia("(prefers-color-scheme: dark)").matches;
   const [dark, setDark] = useSetting<boolean>("dark", prefersDark);
   const [colorBlind, setColorBlind] = useSetting<boolean>("colorblind", false);
+  const [chicken, setChicken] = useSetting<boolean>("chicken", false);
   const [difficulty, setDifficulty] = useSetting<number>("difficulty", 0);
   const [keyboard, setKeyboard] = useSetting<string>(
     "keyboard",
     "qwertyuiop-asdfghjkl-BzxcvbnmE"
   );
   const [enterLeft, setEnterLeft] = useSetting<boolean>("enter-left", false);
+  const displayNone = 
+  {
+	display: 'none'
+  };
 
   useEffect(() => {
     document.body.className = dark ? "dark" : "";
@@ -64,6 +69,9 @@ function App() {
 
   return (
     <div className={"App-container" + (colorBlind ? " color-blind" : "")}>
+	<audio id="audio" style={displayNone}>
+		<source src="./scream1.mp3" type="audio/mpeg"></source>
+	</audio>
       <h1>
         <span
           style={{
@@ -128,6 +136,15 @@ function App() {
             />
             <label htmlFor="colorblind-setting">Color blind mode</label>
           </div>
+		  <div className="Settings-setting">
+            <input
+              id="chicken-setting"
+              type="checkbox"
+              checked={chicken}
+              onChange={() => setChicken((x: boolean) => !x)}
+            />
+            <label htmlFor="chicken-setting">Chicken mode</label>
+          </div>
           <div className="Settings-setting">
             <input
               id="difficulty-setting"
@@ -188,6 +205,7 @@ function App() {
         hidden={page !== "game"}
         difficulty={difficulty}
         colorBlind={colorBlind}
+		//chicken={chicken}
         keyboardLayout={keyboard.replaceAll(
           /[BE]/g,
           (x) => (enterLeft ? "EB" : "BE")["BE".indexOf(x)]
