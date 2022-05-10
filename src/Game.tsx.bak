@@ -51,14 +51,15 @@ function dailyTarget()
 {
 	let day = getDifferenceInDays(startDate, new Date());
 	//let day = getDifferenceInDays(startDate, startDate);
+	let target = targets[Math.floor(day)]
 
-	return targets[Math.floor(day)];
+	return target.slice(0, 5);
 }
 
 function dailyTrivia()
 {
 	let day = getDifferenceInDays(startDate, new Date());
-	let trivia = triviaList[Math.floor(day)]
+	let trivia = targets[Math.floor(day)]
 	
 	return trivia.slice(8, trivia.length);
 }
@@ -345,7 +346,7 @@ function Game(props: GameProps) {
 		tStreak = tStats.streak;
 		localStorage.setItem('stats', JSON.stringify(tStats)); // Reset win streak
         //setHint(gameOver("lost"));
-		setHint("You won!\n\nThe answer was " + target.toUpperCase() + ".\n\n" + guesses.concat(currentGuess)
+		setHint("You lost!\n\nThe answer was " + target.toUpperCase() + ".\n\n" + guesses.concat(currentGuess)
                   .map((guess) =>
                     clue(guess, target)
                       .map((c) => emoji[c.clue ?? 0])

@@ -51,14 +51,15 @@ function dailyTarget()
 {
 	let day = getDifferenceInDays(startDate, new Date());
 	//let day = getDifferenceInDays(startDate, startDate);
+	let target = targets[Math.floor(day)]
 
-	return targets[Math.floor(day)];
+	return target.slice(0, 5);
 }
 
 function dailyTrivia()
 {
 	let day = getDifferenceInDays(startDate, new Date());
-	let trivia = triviaList[Math.floor(day)]
+	let trivia = targets[Math.floor(day)]
 	
 	return trivia.slice(8, trivia.length);
 }
@@ -280,7 +281,7 @@ function Game(props: GameProps) {
 	  }
 	  else
 	  {
-		  if (!targetList.includes(currentGuess)) {
+		  if (!dictionary.includes(currentGuess)) {
 			setHint("Not a valid word");
 			return;
 		  }
