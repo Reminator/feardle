@@ -281,7 +281,7 @@ function Game(props: GameProps) {
 	  }
 	  else
 	  {
-		  if (!targetList.includes(currentGuess)) {
+		  if (!dictionary.includes(currentGuess)) {
 			setHint("Not a valid word");
 			return;
 		  }
