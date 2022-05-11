@@ -252,7 +252,13 @@ function Game(props: GameProps) {
   const onKey = (key: string) => {
     if (gameState !== GameState.Playing) {
       if (key === "Enter") {
-        setHint("The answer was " + target.toUpperCase() + ".\n\n" + trivia + "\n\nNo more tries today. Come back tomorrow!");
+		setHint("The answer was " + target.toUpperCase() + ".\n\n" + guesses.concat(currentGuess)
+                  .map((guess) =>
+                    clue(guess, target)
+                      .map((c) => emoji[c.clue ?? 0])
+                      .join("")
+                  )
+                  .join("\n") + "\n" + trivia + "\n\nNo more tries today. Come back tomorrow!");
       }
       return;
     }
