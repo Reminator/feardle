@@ -172,7 +172,7 @@ function Game(props: GameProps) {
   };
 
   async function share(url: string, copiedHint: string, emoji?: string, score?: string) {
-    const body = url + (emoji ? "\n\nFeardle " + FeardleNumber + "\n" + score + "\n" + emoji : "");
+    const body = url + (emoji ? "\n\nFeardle " + FeardleNumber + " " + score + "\n\n" + emoji : "");
     if (
       /android|iphone|ipad|ipod|webos/i.test(navigator.userAgent) &&
       !/firefox/i.test(navigator.userAgent)

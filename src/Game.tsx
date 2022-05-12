@@ -123,7 +123,6 @@ function Game(props: GameProps) {
 	"guessNumber": 0,
 	"diff": null
   };
-  //var scream1 = new Audio('scream1.mp3');
   
   if (localStorage.getItem('stats') ===  null)
   {
