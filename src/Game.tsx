@@ -33,7 +33,7 @@ interface GameProps {
   keyboardLayout: string;  
 }
 
-const targets = targetList.slice(0, targetList.indexOf("craze") + 1); // Choose target words
+const targets = targetList; // Choose target words
 const minWordLength = 4;
 const maxWordLength = 11;
 const startDate = new Date("2022-5-11");
@@ -54,7 +54,7 @@ function dailyTarget()
 	let target = targets[Math.floor(day)]
 	
 	// Debug
-	console.log("Target is: " + target.slice(0, 5);
+	console.log("Target is: " + target.slice(0, 5));
 
 	return target.slice(0, 5);
 }
@@ -65,7 +65,7 @@ function dailyTrivia()
 	let trivia = targets[Math.floor(day)]
 	
 	// Debug
-	console.log("Trivia is: " + trivia.slice(8, trivia.length);
+	console.log("Trivia is: " + trivia.slice(8, trivia.length));
 	
 	return trivia.slice(8, trivia.length);
 }
