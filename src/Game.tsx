@@ -123,7 +123,7 @@ function Game(props: GameProps) {
 	"guessNumber": 0,
 	"diff": null
   };
-  var scream1 = new Audio('scream1.mp3');
+  //var scream1 = new Audio('scream1.mp3');
   
   if (localStorage.getItem('stats') ===  null)
   {
@@ -362,8 +362,8 @@ function Game(props: GameProps) {
         setGameState(GameState.Lost);
       } else {
         setHint("");
-		let audioPlayer = document.getElementById('audio') as HTMLAudioElement;
-		audioPlayer.play();
+		/* let audioPlayer = document.getElementById('audio') as HTMLAudioElement;
+		audioPlayer.play(); */
         speak(describeClue(clue(currentGuess, target)));
       }
 	  tProgress.guessList = guesses;

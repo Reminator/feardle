@@ -36,7 +36,7 @@ interface GameProps {
 const targets = targetList.slice(0, targetList.indexOf("craze") + 1); // Choose target words
 const minWordLength = 4;
 const maxWordLength = 11;
-const startDate = new Date("2022-5-10");
+const startDate = new Date("2022-5-11");
 var answerText = "";
 
 function getDifferenceInDays(date1: any, date2: any)
