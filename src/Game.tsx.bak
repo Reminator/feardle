@@ -422,6 +422,7 @@ function Game(props: GameProps) {
         />
       );
     });
+	// Debug
 	console.log("end of game function");
 
   return (
