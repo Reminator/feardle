@@ -50,11 +50,7 @@ const FeardleNumber = Math.floor(getDifferenceInDays(startDate, new Date())) + 1
 function dailyTarget()
 {
 	let day = getDifferenceInDays(startDate, new Date());
-	//let day = getDifferenceInDays(startDate, startDate);
-	let target = targets[Math.floor(day)]
-	
-	// Debug
-	console.log("Target is: " + target.slice(0, 5));
+	let target = targets[Math.floor(day)];
 
 	return target.slice(0, 5);
 }
@@ -62,10 +58,7 @@ function dailyTarget()
 function dailyTrivia()
 {
 	let day = getDifferenceInDays(startDate, new Date());
-	let trivia = targets[Math.floor(day)]
-	
-	// Debug
-	console.log("Trivia is: " + trivia.slice(8, trivia.length));
+	let trivia = targets[Math.floor(day)];
 	
 	return trivia.slice(8, trivia.length);
 }
@@ -202,8 +195,6 @@ function Game(props: GameProps) {
   // Load stuffs
   window.onload = function()
   {
-	// Debug
-	console.log("Loading...");
 	progress = JSON.parse(localStorage.getItem('progress') || "");
 	stats = JSON.parse(localStorage.getItem('stats') || "");
 	
@@ -254,8 +245,6 @@ function Game(props: GameProps) {
 		localStorage.setItem('stats', JSON.stringify(stats));
 		localStorage.setItem('progress', JSON.stringify(progress));
 	}
-	// Debug
-	console.log("Loading complete.");
   }  
   
   const onKey = (key: string) => {
@@ -427,8 +416,6 @@ function Game(props: GameProps) {
         />
       );
     });
-	// Debug
-	console.log("end of game function");
 
   return (
     <div className="Game" style={{ display: props.hidden ? "none" : "block" }}>
