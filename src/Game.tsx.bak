@@ -52,6 +52,9 @@ function dailyTarget()
 	let day = getDifferenceInDays(startDate, new Date());
 	//let day = getDifferenceInDays(startDate, startDate);
 	let target = targets[Math.floor(day)]
+	
+	// Debug
+	console.log("Target is: " + target.slice(0, 5);
 
 	return target.slice(0, 5);
 }
@@ -123,7 +126,6 @@ function Game(props: GameProps) {
 	"guessNumber": 0,
 	"diff": null
   };
-  //var scream1 = new Audio('scream1.mp3');
   
   if (localStorage.getItem('stats') ===  null)
   {
