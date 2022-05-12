@@ -69,9 +69,9 @@ function App() {
 
   return (
     <div className={"App-container" + (colorBlind ? " color-blind" : "")}>
-	<audio id="audio" style={displayNone}>
+	/* <audio id="audio" style={displayNone}>
 		<source src="./scream1.mp3" type="audio/mpeg"></source>
-	</audio>
+	</audio> */
       <h1>
         <span
           style={{
