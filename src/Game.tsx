@@ -45,7 +45,7 @@ function getDifferenceInDays(date1: any, date2: any)
   return diffInDays / ((1000 * 60 * 60 * 24));
 }
 
-const FeardleNumber = Math.floor(getDifferenceInDays(startDate, new Date()));
+const FeardleNumber = Math.floor(getDifferenceInDays(startDate, new Date())) + 1;
 
 function dailyTarget()
 {
@@ -197,6 +197,8 @@ function Game(props: GameProps) {
   // Load stuffs
   window.onload = function()
   {
+	// Debug
+	console.log("Loading...");
 	progress = JSON.parse(localStorage.getItem('progress') || "");
 	stats = JSON.parse(localStorage.getItem('stats') || "");
 	
@@ -247,6 +249,8 @@ function Game(props: GameProps) {
 		localStorage.setItem('stats', JSON.stringify(stats));
 		localStorage.setItem('progress', JSON.stringify(progress));
 	}
+	// Debug
+	console.log("Loading complete.");
   }  
   
   const onKey = (key: string) => {
@@ -418,6 +422,8 @@ function Game(props: GameProps) {
         />
       );
     });
+	// Debug
+	console.log("end of game function");
 
   return (
     <div className="Game" style={{ display: props.hidden ? "none" : "block" }}>
