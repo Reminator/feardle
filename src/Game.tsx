@@ -53,6 +53,7 @@ function dailyTarget()
 	let target = targets[Math.floor(day)];
 	
 	// Debug
+	console.log(targets);
 	console.log("Target word is: " + target);
 
 	return target.slice(0, 5);
