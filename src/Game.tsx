@@ -36,7 +36,7 @@ interface GameProps {
 const targets = targetList; // Choose target words
 const minWordLength = 4;
 const maxWordLength = 11;
-const startDate = new Date("2022-5-11");
+const startDate = new Date(2022, 4, 13);
 var answerText = "";
 
 function getDifferenceInDays(date1: any, date2: any)
@@ -53,12 +53,12 @@ function dailyTarget()
 	let target = targets[Math.floor(day)];
 	
 	// Debug
-	console.log("Target list: " + targets);
+	/* console.log("Target list: " + targets);
 	console.log("Start date is: " + startDate);
 	console.log("Today's date is: " + new Date());
 	console.log("Day sans floor: " + day);
 	console.log("Day is: " + Math.floor(day));
-	console.log("Target word is: " + target);
+	console.log("Target word is: " + target); */
 
 	return target.slice(0, 5);
 	//return triviaList[Math.floor(day)];
