@@ -50,10 +50,13 @@ const FeardleNumber = Math.floor(getDifferenceInDays(startDate, new Date())) + 1
 function dailyTarget()
 {
 	let day = getDifferenceInDays(startDate, new Date());
-	//let target = targets[Math.floor(day)];
+	let target = targets[Math.floor(day)];
+	
+	// Debug
+	console.log("Target word is: " + target);
 
-	//return target.slice(0, 5);
-	return triviaList[Math.floor(day)];
+	return target.slice(0, 5);
+	//return triviaList[Math.floor(day)];
 }
 
 function dailyTrivia()
@@ -61,8 +64,8 @@ function dailyTrivia()
 	let day = getDifferenceInDays(startDate, new Date());
 	let trivia = targets[Math.floor(day)];
 	
-	//return trivia.slice(8, trivia.length);
-	return trivia;
+	return trivia.slice(8, trivia.length);
+	//return trivia;
 }
 
 function randomTarget(wordLength: number): string {
