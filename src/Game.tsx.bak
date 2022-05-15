@@ -446,12 +446,7 @@ function Game(props: GameProps) {
       >
         {hint || `\u00a0`}
       </p>
-      <Keyboard
-        layout={props.keyboardLayout}
-        letterInfo={letterInfo}
-        onKey={onKey}
-      />
-      {gameState !== GameState.Playing && (
+	  {gameState !== GameState.Playing && (
         <p>
           <button
             onClick={() => {
@@ -480,6 +475,11 @@ function Game(props: GameProps) {
           </button>
         </p>
       )}
+      <Keyboard
+        layout={props.keyboardLayout}
+        letterInfo={letterInfo}
+        onKey={onKey}
+      />      
       {challenge ? (
         <div className="Game-seed-info">playing a challenge game</div>
       ) : seed ? (
