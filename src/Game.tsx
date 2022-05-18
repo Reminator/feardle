@@ -248,9 +248,12 @@ function Game(props: GameProps) {
 		if(difference > 1)
 			stats.streak = 0;
 	
+		// Reset progress
 		progress.lastTarget = target;
 		progress.dailyComplete = false;
 		progress.guessNumber = 0;
+		progress.guessList = [];
+		progress.current = "";
 		
 		localStorage.setItem('stats', JSON.stringify(stats));
 		localStorage.setItem('progress', JSON.stringify(progress));
