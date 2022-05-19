@@ -12,7 +12,6 @@
 "chord - The 'Jump Scare' is often accompanied by the 'Scare Chord', a sudden and sharp sforzando of dissonance or sheer noise intended to jolt the audience. One notable use was at the end of 1980s 'Friday the 13th' when Jason's rotting corpse suddenly jumps out of the water and grabs final girl Alice.",
 "masks",
 "candy",
-"congo",
 "gowns",
 "cobra",
 "beaks",
@@ -315,6 +314,7 @@
 "codes",
 "annie",
 "fungi",
+"trike",
 "idols",
 "hades",
 "dooms",
@@ -644,5 +644,5 @@
 "oozed",
 "omens",
 "beans",
-"ailed"
+"ailed",
 ]
