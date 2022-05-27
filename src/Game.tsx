@@ -53,13 +53,9 @@ function dailyTarget()
 	let target = targets[Math.floor(day)];
 	
 	// Debug
-	/* console.log("Target list: " + targets);
-	console.log("Start date is: " + startDate);
-	console.log("Today's date is: " + new Date());
-	console.log("Day sans floor: " + day);
-	console.log("Day is: " + Math.floor(day));
-	console.log("Target word is: " + target); */
-
+	//day = 22;
+	//target = targets[Math.floor(day)];
+	
 	return target.slice(0, 5);
 	//return triviaList[Math.floor(day)];
 }
