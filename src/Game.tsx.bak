@@ -53,8 +53,8 @@ function dailyTarget()
 	let target = targets[Math.floor(day)];
 	
 	// Debug
-	day = 22;
-	target = targets[Math.floor(day)];
+	//day = 22;
+	//target = targets[Math.floor(day)];
 	
 	return target.slice(0, 5);
 	//return triviaList[Math.floor(day)];

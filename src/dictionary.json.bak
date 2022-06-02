@@ -105,7 +105,6 @@
 "burst",
 "buzzy",
 "cabin",
-"cable",
 "caged",
 "cages",
 "calfs",
@@ -163,7 +162,6 @@
 "clues",
 "coach",
 "coals",
-"coast",
 "cobra",
 "codes",
 "codex",
@@ -230,7 +228,6 @@
 "deers",
 "deity",
 "demon",
-"depth",
 "devil",
 "diary",
 "diced",
@@ -240,7 +237,6 @@
 "dirty",
 "ditch",
 "divas",
-"dizzy",
 "djinn",
 "dolls",
 "donna",
@@ -605,7 +601,6 @@
 "wight",
 "witch",
 "wolfs",
-"worts",
 "jason",
 "harga",
 "myers",
@@ -658,5 +653,6 @@
 "david",
 "lynch",
 "roman",
-"vigil"
+"vigil",
+"float"
 ]

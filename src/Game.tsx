@@ -356,6 +356,7 @@ function Game(props: GameProps) {
 		tStats.losses += 1;
 	    tStats.streak = 0;
 		tProgress.dailyComplete = true;
+		tProgress.guessNumber = "X";
 		tStreak = tStats.streak;
 		localStorage.setItem('stats', JSON.stringify(tStats)); // Reset win streak
         //setHint(gameOver("lost"));
