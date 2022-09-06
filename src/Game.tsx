@@ -206,23 +206,25 @@ function Game(props: GameProps) {
 	
 	if(progress.lastTarget === target)
 	{
-		setCurrentGuess(progress.current);
+		let tempGuesses = progress.guessList as string[];
 		setGuesses(progress.guessList);
-		if(progress.current !== "")
-			setGuesses((guesses) => guesses.concat([progress.current]));
-		setCurrentGuess((guess) => "");
-		speak(describeClue(clue(currentGuess, target)));
 		
-		if(progress.guessList !== [])
+		if(progress.current !== "")
+		{
+			setCurrentGuess(progress.current);
+			setGuesses((guesses) => guesses.concat([progress.current]));	
+			tempGuesses.push(progress.current);			
+		}
+		setCurrentGuess((guess) => "");
+		speak(describeClue(clue(currentGuess, target)));		
+		
+		if(progress.guessList != [])
 		{
 			setHint("");
 		
 			if(progress.guessList.length + 1 === props.maxGuesses)
 				setHint("No more tries today. Come back tomorrow!");
-		}
-		
-		let tempGuesses = progress.guessList as string[];
-		tempGuesses.push(progress.current);
+		}		
 		
 		if(progress.dailyComplete === true)
 		{
@@ -341,8 +343,7 @@ function Game(props: GameProps) {
 		}
 
 		tStreak = tStats.streak;
-		localStorage.setItem('stats', JSON.stringify(tStats)); // Store wins and current win streak		
-        //setHint(gameOver("won"));
+		localStorage.setItem('stats', JSON.stringify(tStats)); // Store wins and current win streak	
 		setHint("You won!\n\nThe answer was " + target.toUpperCase() + ".\n\n" + guesses.concat(currentGuess)
                   .map((guess) =>
                     clue(guess, target)
@@ -359,7 +360,6 @@ function Game(props: GameProps) {
 		tProgress.guessNumber = "X";
 		tStreak = tStats.streak;
 		localStorage.setItem('stats', JSON.stringify(tStats)); // Reset win streak
-        //setHint(gameOver("lost"));
 		setHint("You lost!\n\nThe answer was " + target.toUpperCase() + ".\n\n" + guesses.concat(currentGuess)
                   .map((guess) =>
                     clue(guess, target)
