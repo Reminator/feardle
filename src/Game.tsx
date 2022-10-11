@@ -222,7 +222,7 @@ function Game(props: GameProps) {
 		{
 			setHint("");
 		
-			if(progress.guessList.length + 1 === props.maxGuesses)
+			if(progress.guessList.length === props.maxGuesses)
 				setHint("No more tries today. Come back tomorrow!");
 		}		
 		

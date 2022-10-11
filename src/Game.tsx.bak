@@ -208,6 +208,7 @@ function Game(props: GameProps) {
 	{
 		let tempGuesses = progress.guessList as string[];
 		setGuesses(progress.guessList);
+		
 		if(progress.current !== "")
 		{
 			setCurrentGuess(progress.current);
