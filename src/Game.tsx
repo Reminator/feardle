@@ -57,7 +57,6 @@ function dailyTarget()
 	//target = targets[Math.floor(day)];
 	
 	return target.slice(0, 5);
-	//return triviaList[Math.floor(day)];
 }
 
 function dailyTrivia()
@@ -66,7 +65,6 @@ function dailyTrivia()
 	let trivia = targets[Math.floor(day)];
 	
 	return trivia.slice(8, trivia.length);
-	//return trivia;
 }
 
 function randomTarget(wordLength: number): string {
