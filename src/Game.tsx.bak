@@ -62,7 +62,7 @@ function dailyTarget()
 function dailyTrivia()
 {
 	let day = getDifferenceInDays(startDate, new Date());
-	let trivia = targets[Math.floor(day)];
+	let trivia = targets[Math.floor(day)/7];
 	
 	return trivia.slice(8, trivia.length);
 }
