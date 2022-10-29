@@ -62,7 +62,7 @@ function dailyTarget()
 function dailyTrivia()
 {
 	let day = getDifferenceInDays(startDate, new Date());
-	let trivia = targets[Math.floor(day)];
+	let trivia = targets[Math.floor(day)/7];
 	
 	return trivia.slice(8, trivia.length);
 }
@@ -265,7 +265,7 @@ function Game(props: GameProps) {
                       .map((c) => emoji[c.clue ?? 0])
                       .join("")
                   )
-                  .join("\n") + "\n" + trivia + "\n\nNo more tries today. Come back tomorrow!");
+                  .join("\n") + "\n" + trivia + "\n\nNo more tries today. Come back next Friday!");
       }
       return;
     }
