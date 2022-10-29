@@ -36,7 +36,7 @@ interface GameProps {
 const targets = targetList; // Choose target words
 const minWordLength = 4;
 const maxWordLength = 11;
-const startDate = new Date(2022, 4, 11);
+const startDate = new Date(2022, 9, 28);
 var answerText = "";
 
 function getDifferenceInDays(date1: any, date2: any)
@@ -45,12 +45,12 @@ function getDifferenceInDays(date1: any, date2: any)
   return diffInDays / ((1000 * 60 * 60 * 24));
 }
 
-const FeardleNumber = Math.floor(getDifferenceInDays(startDate, new Date())) + 1;
+const FeardleNumber = Math.floor(getDifferenceInDays(startDate, new Date())/7) + 171;
 
 function dailyTarget()
 {
 	let day = getDifferenceInDays(startDate, new Date());
-	let target = targets[Math.floor(day)];
+	let target = targets[Math.floor(day/7)];
 	
 	// Debug
 	//day = 22;
@@ -211,17 +211,17 @@ function Game(props: GameProps) {
 		{
 			setCurrentGuess(progress.current);
 			setGuesses((guesses) => guesses.concat([progress.current]));	
-			tempGuesses.push(progress.current);			
+			tempGuesses.push(progress.current);
 		}
 		setCurrentGuess((guess) => "");
-		speak(describeClue(clue(currentGuess, target)));		
+		speak(describeClue(clue(currentGuess, target)));
 		
 		if(progress.guessList != [])
 		{
 			setHint("");
 		
 			if(progress.guessList.length === props.maxGuesses)
-				setHint("No more tries today. Come back tomorrow!");
+				setHint("No more tries today. Come back next Friday!");
 		}		
 		
 		if(progress.dailyComplete === true)
