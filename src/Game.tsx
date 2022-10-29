@@ -233,7 +233,7 @@ function Game(props: GameProps) {
                       .map((c) => emoji[c.clue ?? 0])
                       .join("")
                   )
-                  .join("\n") + "\n\n" + trivia);
+                  .join("\n") + "\n\n" + trivia + "\n\nNo more tries today. Come back next Friday!");
 		}
 	}
 	else
